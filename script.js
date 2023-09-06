@@ -7,10 +7,23 @@ function inputNum(value) {
     clearAll();
     isResultCalculated = false;
   }
+
+  if (value === "." && expression.includes(".")) {
+    return;
+  }
+
   expression += value;
-  resultElement.textContent = expression;
+
+  const formattedExpression = formatExpression(expression);
+
+  resultElement.textContent = formattedExpression;
 }
 
+function formatExpression(expression) {
+  const formattedExpression = expression.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  return formattedExpression;
+}
 function operatorType(value) {
   if (isResultCalculated) {
     isResultCalculated = false;
@@ -45,8 +58,9 @@ function clearEntry() {
 function calculateResult() {
   try {
     const result = eval(expression);
-    expression = result.toString();
-    resultElement.textContent = result;
+    expression = formatExpression(result.toString());
+
+    resultElement.textContent = expression;
     isResultCalculated = true;
   } catch (error) {
     resultElement.textContent = "Error";
